@@ -1,11 +1,11 @@
 /*
-    opcn2.h - Library for operating the Alphasense OPC-N2 Particle counter.
-    Created by David H Hagan, March 2016.
+    opcn3.h - Library for operating the Alphasense OPC-N3 Particle counter.
+    Created by Reid A. Yesson August 2019.
     Released with an MIT license.
 */
 
-#ifndef Opcn2_h
-#define Opcn2_h
+#ifndef Opcn3_h
+#define Opcn3_h
 
 // Includes
 #include "application.h"
@@ -39,6 +39,14 @@ struct HistogramData {
     double bin13;
     double bin14;
     double bin15;
+    double bin16;
+    double bin17;
+    double bin18;
+    double bin19;
+    double bin20;
+    double bin21;
+    double bin22;
+    double bin23;
 
     // Mass Time-of-Flight
     float bin1MToF;
@@ -49,8 +57,12 @@ struct HistogramData {
     // Sample Flow Rate
     float sfr;
 
-    // Either the Temperature or Pressure
-    unsigned long temp_pressure;
+    // The temperature
+    //unsigned long temp_pressure;
+    unsigned int temp;
+
+    // Humidity
+    unsigned int humidity;
 
     // Sampling Period
     float period;

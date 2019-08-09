@@ -1,11 +1,11 @@
-#include "opcn2.h"
+#include "opcn3.h"
 
-OPCN2::OPCN2(uint8_t chip_select)
+OPCN3::OPCN3(uint8_t chip_select)
 {
 
 }
 
-void OPCN2::begin(uint8_t chip_select)
+void OPCN3::begin(uint8_t chip_select)
 {
     // Initiate an instance of the OPCN2 class
   // Ex. OPCN2 alpha(chip_select = A2);
@@ -34,7 +34,7 @@ void OPCN2::begin(uint8_t chip_select)
 
 }
 
-void OPCN2::set_firmware_version( void )
+void OPCN3::set_firmware_version( void )
 {
   // Set the firmware version in case it previously failed
   // Set the firmware version
@@ -51,13 +51,13 @@ void OPCN2::set_firmware_version( void )
   }
 }
 
-uint16_t OPCN2::_16bit_int(byte LSB, byte MSB)
+uint16_t OPCN3::_16bit_int(byte LSB, byte MSB)
 {
   // Combine two bytes into a 16-bit unsigned int
   return ((MSB << 8) | LSB);
 }
 
-bool OPCN2::_compare_arrays(byte array1[], byte array2[], int length)
+bool OPCN3::_compare_arrays(byte array1[], byte array2[], int length)
 {
   // Compare two arrays and return a boolean
   bool result = true;
@@ -71,7 +71,7 @@ bool OPCN2::_compare_arrays(byte array1[], byte array2[], int length)
   return result;
 }
 
-float OPCN2::_calculate_float(byte val0, byte val1, byte val2, byte val3)
+float OPCN3::_calculate_float(byte val0, byte val1, byte val2, byte val3)
 {
   // Return an IEEE754 float from an array of 4 bytes
   union u_tag {
@@ -87,13 +87,13 @@ float OPCN2::_calculate_float(byte val0, byte val1, byte val2, byte val3)
   return u.val;
 }
 
-uint32_t OPCN2::_32bit_int(byte val0, byte val1, byte val2, byte val3)
+uint32_t OPCN3::_32bit_int(byte val0, byte val1, byte val2, byte val3)
 {
   // Return a 32-bit unsigned int from 4 bytes
   return ((val3 << 24) | (val2 << 16) | (val1 << 8) | val0);
 }
 
-bool OPCN2::ping()
+bool OPCN3::ping()
 {
   // Isse the check status command
   // ex.
@@ -131,7 +131,7 @@ bool OPCN2::on()
   return this->_compare_arrays(vals, expected, 2);
 }
 
-bool OPCN2::off()
+bool OPCN3::off()
 {
   // Turn OFF the OPC and return a boolean
   // Ex.
@@ -643,7 +643,9 @@ struct HistogramData OPCN2::read_histogram(bool convert_to_conc)
   // Ex.
   // $ alpha.read_histogram(true)
   HistogramData data;
-  byte vals[62];
+  int histogramReturns = 61;
+  byte vals[histogramReturns + 1];
+  //byte vals[62];
 
   // Read the data and clear the local memory
   digitalWrite(this->_CS, LOW);       // Pull the CS Low
@@ -655,15 +657,17 @@ struct HistogramData OPCN2::read_histogram(bool convert_to_conc)
   // Send commands and build array of data
   digitalWrite(this->_CS, LOW);
 
-  for (int i = 0; i < 62; i++){
+  for (int i = 0; i < histogramReturns + 1; i++){
       vals[i] = SPI1.transfer(0x00);
       delayMicroseconds(4);
   }
 
   digitalWrite(this->_CS, HIGH);      // Pull the CS High
 
-  data.period = this->_calculate_float(vals[44], vals[45], vals[46], vals[47]);
-  data.sfr    = this->_calculate_float(vals[36], vals[37], vals[38], vals[39]);
+  //data.period = this->_calculate_float(vals[44], vals[45], vals[46], vals[47]);
+  data.period = (double)this->_16bit_int(vals[52], vals[53]]);
+  //data.sfr    = this->_calculate_float(vals[36], vals[37], vals[38], vals[39]);
+  data.sfr = (double)this->_16bit_int(vals[54], vals[55]]);
 
   // If convert_to_conc = True, convert from raw data to concentration
   double conv;
@@ -692,22 +696,33 @@ struct HistogramData OPCN2::read_histogram(bool convert_to_conc)
   data.bin13  = (double)this->_16bit_int(vals[26], vals[27]) / conv;
   data.bin14  = (double)this->_16bit_int(vals[28], vals[29]) / conv;
   data.bin15  = (double)this->_16bit_int(vals[30], vals[31]) / conv;
+  data.bin16  = (double)this->_16bit_int(vals[32], vals[33]) / conv;
+  data.bin17  = (double)this->_16bit_int(vals[34], vals[35]) / conv;
+  data.bin18  = (double)this->_16bit_int(vals[36], vals[37]) / conv;
+  data.bin19  = (double)this->_16bit_int(vals[38], vals[39]) / conv;
+  data.bin20  = (double)this->_16bit_int(vals[40], vals[41]) / conv;
+  data.bin21  = (double)this->_16bit_int(vals[42], vals[43]) / conv;
+  data.bin22  = (double)this->_16bit_int(vals[44], vals[45]) / conv;
+  data.bin23  = (double)this->_16bit_int(vals[46], vals[47]) / conv;
 
-  data.bin1MToF = int(vals[32]) / 3.0;
-  data.bin3MToF = int(vals[33]) / 3.0;
-  data.bin5MToF = int(vals[34]) / 3.0;
-  data.bin7MToF = int(vals[35]) / 3.0;
+  data.bin1MToF = int(vals[48]) / 3.0;
+  data.bin3MToF = int(vals[49]) / 3.0;
+  data.bin5MToF = int(vals[50]) / 3.0;
+  data.bin7MToF = int(vals[51]) / 3.0;
 
   // This holds either temperature or pressure
   // If temp, this is temp in C x 10
   // If pressure, this is pressure in Pa
-  data.temp_pressure = this->_32bit_int(vals[40], vals[41], vals[42], vals[43]);
+  //data.temp= this->_32bit_int(vals[40], vals[41], vals[42], vals[43]);
+  data.temp = this->_16bit_int(vals[56], vals[57]);
+  // Relative humidity
+  data.humidity = this->_16bit_int(vals[58], vals[59]);
+  
+  data.checksum = this->_16bit_int(vals[84], vals[85]);
 
-  data.checksum = this->_16bit_int(vals[48], vals[49]);
-
-  data.pm1 = this->_calculate_float(vals[50], vals[51], vals[52], vals[53]);
-  data.pm25 = this->_calculate_float(vals[54], vals[55], vals[56], vals[57]);
-  data.pm10 = this->_calculate_float(vals[58], vals[59], vals[60], vals[61]);
+  data.pm1 = this->_calculate_float(vals[60], vals[61], vals[62], vals[63]);
+  data.pm25 = this->_calculate_float(vals[64], vals[65], vals[66], vals[67]);
+  data.pm10 = this->_calculate_float(vals[68], vals[69], vals[70], vals[71]);
 
   return data;
 }
