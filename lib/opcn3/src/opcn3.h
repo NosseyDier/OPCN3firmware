@@ -98,7 +98,70 @@ struct ConfigVars {
     int bb12;
     int bb13;
     int bb14;
+    int bb15;
+    int bb16;
+    int bb17;
+    int bb18;
+    int bb19;
+    int bb20;
+    int bb21;
+    int bb22;
+    int bb23;
+    int bb24;
 
+    int bbd0;
+    int bbd1;
+    int bbd2;
+    int bbd3;
+    int bbd4;
+    int bbd5;
+    int bbd6;
+    int bbd7;
+    int bbd8;
+    int bbd9;
+    int bbd10;
+    int bbd11;
+    int bbd12;
+    int bbd13;
+    int bbd14;
+    int bbd15;
+    int bbd16;
+    int bbd17;
+    int bbd18;
+    int bbd19;
+    int bbd20;
+    int bbd21;
+    int bbd22;
+    int bbd23;
+    int bbd24;
+
+    int bw0;
+    int bw1;
+    int bw2;
+    int bw3;
+    int bw4;
+    int bw5;
+    int bw6;
+    int bw7;
+    int bw8;
+    int bw9;
+    int bw10;
+    int bw11;
+    int bw12;
+    int bw13;
+    int bw14;
+    int bw15;
+    int bw16;
+    int bw17;
+    int bw18;
+    int bw19;
+    int bw20;
+    int bw21;
+    int bw22;
+    int bw23;
+
+    
+    /*
     // Bin Particle Volume (floats)
     float bpv0;
     float bpv1;
@@ -152,6 +215,7 @@ struct ConfigVars {
     float bsvw13;
     float bsvw14;
     float bsvw15;
+    */
 
     // Gain Scaling Coefficient
     float gsc;

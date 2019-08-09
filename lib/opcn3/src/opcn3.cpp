@@ -109,7 +109,7 @@ bool OPCN3::ping()
   return this->_compare_arrays(resp, expected, 1);
 }
 
-bool OPCN2::on()
+bool OPCN3::on()
 {
   // Turn ON the OPC and return a boolean
   // Ex.
@@ -153,7 +153,7 @@ bool OPCN3::off()
   return this->_compare_arrays(vals, expected, 2);
 }
 
-String OPCN2::read_information_string()
+String OPCN3::read_information_string()
 {
   // Read the information string and return a string
   // Ex.
@@ -181,7 +181,7 @@ String OPCN2::read_information_string()
   return result;
 }
 
-struct Status OPCN2::read_status()
+struct Status OPCN3::read_status()
 {
   // Read key status variables from the OPC-N2
   // Only available with Alphasense OPC-N2 > firmware v18
@@ -215,7 +215,7 @@ struct Status OPCN2::read_status()
   return data;
 }
 
-struct Firmware OPCN2::read_firmware_version()
+struct Firmware OPCN3::read_firmware_version()
 {
   // Only available with Alphasense OPC-N2 > firmware v18
   // Ex.
@@ -238,27 +238,27 @@ struct Firmware OPCN2::read_firmware_version()
   return res;
 }
 
-bool OPCN2::write_config_variables(byte values[])
+bool OPCN3::write_config_variables(byte values[])
 {
   // Write the configuration [NOT IMPLEMENTED]
   return true;
 }
 
-bool OPCN2::write_config_variables2(byte values[])
+bool OPCN3::write_config_variables2(byte values[])
 {
   // Write the configuration [NOT IMPLEMENTED]
   // Only available with Alphasense OPC-N2 > firmware v18
   return true;
 }
 
-bool OPCN2::write_serial_number_string(byte values[])
+bool OPCN3::write_serial_number_string(byte values[])
 {
   // NOT IMPLEMENTED
   // Only available with Alphasense OPC-N2 > firmware v18
   return true;
 }
 
-bool OPCN2::save_config_variables()
+bool OPCN3::save_config_variables()
 {
   // Save the configuration variables
   // Ex.
@@ -284,7 +284,7 @@ bool OPCN2::save_config_variables()
   return this->_compare_arrays(resp, expected, 6);
 }
 
-bool OPCN2::enter_bootloader()
+bool OPCN3::enter_bootloader()
 {
   // Enter into bootloader mode
   byte resp[1];
@@ -297,7 +297,7 @@ bool OPCN2::enter_bootloader()
   return this->_compare_arrays(resp, expected, 1);
 }
 
-bool OPCN2::set_fan_power(uint8_t value)
+bool OPCN3::set_fan_power(uint8_t value)
 {
   // Set the fan power
   // Value must be between 0-255
@@ -323,7 +323,7 @@ bool OPCN2::set_fan_power(uint8_t value)
   return this->_compare_arrays(resp, expected, 3);
 }
 
-bool OPCN2::set_laser_power(uint8_t value)
+bool OPCN3::set_laser_power(uint8_t value)
 {
   // Set the laser power
   // Value must be between 0-255
@@ -349,7 +349,7 @@ bool OPCN2::set_laser_power(uint8_t value)
   return this->_compare_arrays(resp, expected, 3);
 }
 
-bool OPCN2::toggle_fan(bool state)
+bool OPCN3::toggle_fan(bool state)
 {
   // Toggle the state of the fan
   // Ex.
@@ -377,7 +377,7 @@ bool OPCN2::toggle_fan(bool state)
   return this->_compare_arrays(resp, expected, 2);
 }
 
-bool OPCN2::toggle_laser(bool state)
+bool OPCN3::toggle_laser(bool state)
 {
   // Toggle the state of the laser
   // Ex.
@@ -404,7 +404,7 @@ bool OPCN2::toggle_laser(bool state)
   return this->_compare_arrays(resp, expected, 2);
 }
 
-struct ConfigVars OPCN2::read_configuration_variables()
+struct ConfigVars OPCN3::read_configuration_variables()
 {
   // Read the configuration variables and return the structure
   // Ex.
@@ -443,7 +443,69 @@ struct ConfigVars OPCN2::read_configuration_variables()
   results.bb12 = this->_16bit_int(vals[24], vals[25]);
   results.bb13 = this->_16bit_int(vals[26], vals[27]);
   results.bb14 = this->_16bit_int(vals[28], vals[29]);
+  results.bb15 = this->_16bit_int(vals[30], vals[31]);
+  results.bb16 = this->_16bit_int(vals[32], vals[33]);
+  results.bb17 = this->_16bit_int(vals[34], vals[35]);
+  results.bb18 = this->_16bit_int(vals[36], vals[37]);
+  results.bb19 = this->_16bit_int(vals[38], vals[39]);
+  results.bb20 = this->_16bit_int(vals[40], vals[41]);
+  results.bb21 = this->_16bit_int(vals[42], vals[43]);
+  results.bb22 = this->_16bit_int(vals[44], vals[45]);
+  results.bb23 = this->_16bit_int(vals[46], vals[47]);
+  results.bb24 = this->_16bit_int(vals[48], vals[49]);
 
+  results.bbd0 = this->_16bit_int(vals[50], vals[51]);
+  results.bbd1 = this->_16bit_int(vals[52], vals[53]);
+  results.bbd2 = this->_16bit_int(vals[54], vals[55]);
+  results.bbd3 = this->_16bit_int(vals[56], vals[57]);
+  results.bbd4 = this->_16bit_int(vals[58], vals[59]);
+  results.bbd5 = this->_16bit_int(vals[60], vals[61]);
+  results.bbd6 = this->_16bit_int(vals[62], vals[63]);
+  results.bbd7 = this->_16bit_int(vals[64], vals[65]);
+  results.bbd8 = this->_16bit_int(vals[66], vals[67]);
+  results.bbd9 = this->_16bit_int(vals[68], vals[69]);
+  results.bbd10 = this->_16bit_int(vals[70], vals[71]);
+  results.bbd11 = this->_16bit_int(vals[72], vals[73]);
+  results.bbd12 = this->_16bit_int(vals[74], vals[75]);
+  results.bbd13 = this->_16bit_int(vals[76], vals[77]);
+  results.bbd14 = this->_16bit_int(vals[78], vals[79]);
+  results.bbd15 = this->_16bit_int(vals[80], vals[81]);
+  results.bbd16 = this->_16bit_int(vals[82], vals[83]);
+  results.bbd17 = this->_16bit_int(vals[84], vals[85]);
+  results.bbd18 = this->_16bit_int(vals[86], vals[87]);
+  results.bbd19 = this->_16bit_int(vals[88], vals[89]);
+  results.bbd20 = this->_16bit_int(vals[90], vals[91]);
+  results.bbd21 = this->_16bit_int(vals[92], vals[93]);
+  results.bbd22 = this->_16bit_int(vals[94], vals[95]);
+  results.bbd23 = this->_16bit_int(vals[96], vals[97]);
+  results.bbd24 = this->_16bit_int(vals[98], vals[99]);
+
+  results.bw0 = this->_16bit_int(vals[100], vals[101]);
+  results.bw1 = this->_16bit_int(vals[102], vals[103]);
+  results.bw2 = this->_16bit_int(vals[104], vals[105]);
+  results.bw3 = this->_16bit_int(vals[106], vals[107]);
+  results.bw4 = this->_16bit_int(vals[108], vals[109]);
+  results.bw5 = this->_16bit_int(vals[110], vals[111]);
+  results.bw6 = this->_16bit_int(vals[112], vals[113]);
+  results.bw7 = this->_16bit_int(vals[114], vals[115]);
+  results.bw8 = this->_16bit_int(vals[116], vals[117]);
+  results.bw9 = this->_16bit_int(vals[118], vals[119]);
+  results.bw10 = this->_16bit_int(vals[120], vals[121]);
+  results.bw11 = this->_16bit_int(vals[122], vals[123]);
+  results.bw12 = this->_16bit_int(vals[124], vals[125]);
+  results.bw13 = this->_16bit_int(vals[126], vals[127]);
+  results.bw14 = this->_16bit_int(vals[128], vals[129]);
+  results.bw15 = this->_16bit_int(vals[130], vals[131]);
+  results.bw16 = this->_16bit_int(vals[132], vals[133]);
+  results.bw17 = this->_16bit_int(vals[134], vals[135]);
+  results.bw18 = this->_16bit_int(vals[136], vals[137]);
+  results.bw19 = this->_16bit_int(vals[138], vals[139]);
+  results.bw20 = this->_16bit_int(vals[140], vals[141]);
+  results.bw21 = this->_16bit_int(vals[142], vals[143]);
+  results.bw22 = this->_16bit_int(vals[144], vals[145]);
+  results.bw23 = this->_16bit_int(vals[146], vals[147]);
+
+  /*
   // Bin Particle Volumes
   results.bpv0 = this->_calculate_float(vals[32], vals[33], vals[34], vals[35]);
   results.bpv1 = this->_calculate_float(vals[36], vals[37], vals[38], vals[39]);
@@ -497,6 +559,7 @@ struct ConfigVars OPCN2::read_configuration_variables()
   results.bsvw13 = this->_calculate_float(vals[212], vals[213], vals[214], vals[215]);
   results.bsvw14 = this->_calculate_float(vals[216], vals[217], vals[218], vals[219]);
   results.bsvw15 = this->_calculate_float(vals[220], vals[221], vals[222], vals[223]);
+  */
 
   // Gain Scaling Coefficient
   results.gsc = this->_calculate_float(vals[224], vals[225], vals[226], vals[227]);
@@ -514,7 +577,7 @@ struct ConfigVars OPCN2::read_configuration_variables()
   return results;
 }
 
-struct ConfigVars2 OPCN2::read_configuration_variables2()
+struct ConfigVars2 OPCN3::read_configuration_variables2()
 {
   // Read the additional configuration variables
   // Only available on OPCN2's with firmware >v18
@@ -559,7 +622,7 @@ struct ConfigVars2 OPCN2::read_configuration_variables2()
   return results;
 }
 
-String OPCN2::read_serial_number()
+String OPCN3::read_serial_number()
 {
   // Read the serial number of the OPC
   // Only available on OPCN2's with firmware >v18
@@ -594,7 +657,7 @@ String OPCN2::read_serial_number()
   return result;
 }
 
-struct PMData OPCN2::read_pm_data()
+struct PMData OPCN3::read_pm_data()
 {
   // Read the PM Data and reset the histogram, return the struct
   // Only available on OPCN2's with firmware >v18
@@ -634,7 +697,7 @@ struct PMData OPCN2::read_pm_data()
   return data;
 }
 
-struct HistogramData OPCN2::read_histogram(bool convert_to_conc)
+struct HistogramData OPCN3::read_histogram(bool convert_to_conc)
 {
   // Read the Histogram Data and reset the histogram, return the struct
   // convert_to_conc can be set to true if you would like the result
@@ -643,7 +706,7 @@ struct HistogramData OPCN2::read_histogram(bool convert_to_conc)
   // Ex.
   // $ alpha.read_histogram(true)
   HistogramData data;
-  int histogramReturns = 61;
+  int histogramReturns = 85;
   byte vals[histogramReturns + 1];
   //byte vals[62];
 
