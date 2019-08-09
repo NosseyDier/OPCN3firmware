@@ -1,0 +1,28 @@
+# Datatypes
+OPCN3   KEYWORD1
+
+# Methods and Functions
+ping    KEYWORD2
+on  KEYWORD2
+off KEYWORD2
+write_config_variables  KEYWORD2
+write_config_variables2  KEYWORD2
+write_serial_number_string KEYWORD2
+save_config_variables   KEYWORD2
+enter_bootloader    KEYWORD2
+set_fan_power   KEYWORD2
+set_laser_power KEYWORD2
+toggle_fan  KEYWORD2
+toggle_laser    KEYWORD2
+read_information_string KEYWORD2
+read_serial_number KEYWORD2
+read_firmware_version KEYWORD2
+read_status KEYWORD2
+read_configuration_variables KEYWORD2
+read_configuration_variables2 KEYWORD2
+read_pm_data KEYWORD2
+read_histogram   KEYWORD2
+
+
+# Constants
+firm_ver    LITERAL1
