@@ -172,7 +172,7 @@ struct ConfigVars {
     unsigned int tof_sfr;
 };
 
-class OPCN2
+class OPCN3
 {
 private:
     // attributes
@@ -186,7 +186,7 @@ private:
     uint32_t _32bit_int(byte val0, byte val1, byte val2, byte val3);
 
 public:
-    OPCN2(uint8_t chip_select);
+    OPCN3(uint8_t chip_select);
 
     // attributes
     Firmware firm_ver;

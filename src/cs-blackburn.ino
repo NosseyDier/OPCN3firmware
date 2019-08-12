@@ -1,5 +1,5 @@
 // This #include statement was automatically added by the Particle IDE.
-#include "opcn3.h"
+#include <opcn3.h>
 #include "Pca9554.h"
 SYSTEM_MODE(MANUAL);
 
@@ -10,6 +10,7 @@ SYSTEM_MODE(MANUAL);
 
 OPCN3 alpha(D5);
 HistogramData hist;
+Status power_data;
 ConfigVars vars;
 
 void setup(){

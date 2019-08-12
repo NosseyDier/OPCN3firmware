@@ -5,7 +5,7 @@
 #include "application.h"
 #line 1 "/Users/reidyesson/Documents/cs-blackburn-N3/src/cs-blackburn.ino"
 // This #include statement was automatically added by the Particle IDE.
-#include "opcn3.h"
+#include <opcn3.h>
 #include "Pca9554.h"
 void setup();
 void loop();
