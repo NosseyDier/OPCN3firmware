@@ -510,6 +510,7 @@ struct ConfigVars OPCN3::read_configuration_variables()
   results.bw22 = this->_16bit_int(vals[144], vals[145]);
   results.bw23 = this->_16bit_int(vals[146], vals[147]);
   
+  results.max_tof               = this->_16bit_int(vals[154], vals[155]);
   results.AMSamplingInterval    = this->_16bit_int(vals[156], vals[157]);
   results.AMIntervalCount       = this->_16bit_int(vals[158], vals[159]);
   results.AMMaxDataArraysInFile = this->_16bit_int(vals[160], vals[161]);

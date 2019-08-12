@@ -160,6 +160,7 @@ struct ConfigVars {
     int bw22;
     int bw23;
 
+    unsigned int max_tof;
     unsigned int AMSamplingInterval;
     unsigned int AMIntervalCount;
     unsigned int AMFanOnIdle;
