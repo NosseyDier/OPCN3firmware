@@ -1,4 +1,4 @@
-#include <opcn3.h>
+#include "opcn3.h"
 
 OPCN3::OPCN3(uint8_t chip_select)
 {

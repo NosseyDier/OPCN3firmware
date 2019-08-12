@@ -3,13 +3,13 @@
 /******************************************************/
 
 #include "application.h"
-#line 1 "/Users/reidyesson/Documents/cs-blackburn-beta/src/cs-blackburn.ino"
+#line 1 "/Users/reidyesson/Documents/cs-blackburn-N3/src/cs-blackburn.ino"
 // This #include statement was automatically added by the Particle IDE.
-#include <opcn3.h>
+#include "opcn3.h"
 #include "Pca9554.h"
 void setup();
 void loop();
-#line 4 "/Users/reidyesson/Documents/cs-blackburn-beta/src/cs-blackburn.ino"
+#line 4 "/Users/reidyesson/Documents/cs-blackburn-N3/src/cs-blackburn.ino"
 SYSTEM_MODE(MANUAL);
 
 #include <string>
@@ -47,24 +47,25 @@ void setup(){
   Pca9554.digitalWrite(GPIO_A, 7, HIGH);//SET PMS_RST
   //delay(1000);
 
-    delay(1000);
-    alpha.begin(D5);
-    delay(1000);
-    alpha.on();
+  delay(1000);
+  alpha.begin(D5);
+  delay(1000);
+  alpha.on();
 
 
-   
-    Serial.println("Testing OPC-N3 v" + String(alpha.firm_ver.major) + "." + String(alpha.firm_ver.minor));
-    // Read and print the configuration variables
-    vars = alpha.read_configuration_variables();
-    Serial.println("\nConfiguration Variables");
-    Serial.print("\tGSC:\t"); Serial.println(vars.gsc);
-    Serial.print("\tSFR:\t"); Serial.println(vars.sfr);
-    Serial.print("\tLaser DAC:\t"); Serial.println(vars.laser_dac);
-    Serial.print("\tFan DAC:\t"); Serial.println(vars.fan_dac);
-    Serial.print("\tToF-SFR:\t"); Serial.println(vars.tof_sfr);
-   
-    delay(1000);
+  
+  Serial.println("Testing OPC-N3 v" + String(alpha.firm_ver.major) + "." + String(alpha.firm_ver.minor));
+  // Read and print the configuration variables
+  vars = alpha.read_configuration_variables();
+  power_data = alpha.read_status();
+  Serial.println("\nConfiguration Variables");
+  //Serial.print("\tGSC:\t"); Serial.println(vars.gsc);
+  //Serial.print("\tSFR:\t"); Serial.println(vars.sfr);
+  Serial.print("\tLaser DAC:\t"); Serial.println(power_data.laser_dac);
+  Serial.print("\tFan DAC:\t"); Serial.println(power_data.fan_dac);
+  Serial.print("\tToF-SFR:\t"); Serial.println(vars.tof_sfr);
+  
+  delay(1000);
 }
 
 void loop(){
@@ -80,6 +81,7 @@ void loop(){
     Serial.print("\nFirmware version minor:\t"); Serial.println(alpha.read_firmware_version().minor);
 
     Serial.print("\nSampling Period:\t"); Serial.println(hist.period);
+    Serial.print("\tSFR:\t"); Serial.println(hist.sfr);
     Serial.print("PM1: "); Serial.println(hist.pm1);
     //Particle.publish("PM1: ", String::format("%.2f", hist.pm1), PUBLIC);
     Serial.print("PM2.5: "); Serial.println(hist.pm25);
