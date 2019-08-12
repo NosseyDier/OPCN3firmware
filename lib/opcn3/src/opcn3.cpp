@@ -1,4 +1,4 @@
-#include "opcn3.h"
+#include <opcn3.h>
 
 OPCN3::OPCN3(uint8_t chip_select)
 {
@@ -643,7 +643,7 @@ struct HistogramData OPCN3::read_histogram(bool convert_to_conc)
   }
 
   // Calculate all of the values!
-  data.bin0   = (double)this->_16bit_int(vals[0], vals[1]) / conv;
+  data.bin0 = (double)this->_16bit_int(vals[0], vals[1]) / conv;
   data.bin1   = (double)this->_16bit_int(vals[2], vals[3]) / conv;
   data.bin2   = (double)this->_16bit_int(vals[4], vals[5]) / conv;
   data.bin3   = (double)this->_16bit_int(vals[6], vals[7]) / conv;

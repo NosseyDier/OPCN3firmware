@@ -8,7 +8,7 @@
 #define Opcn3_h
 
 // Includes
-#include "application.h"
+#include <application.h>
 
 struct Status {
     int fanON;
