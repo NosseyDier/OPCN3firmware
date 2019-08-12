@@ -22,13 +22,6 @@ struct Firmware {
     int minor;
 };
 
-struct PowerData {
-    // LaserDAC 8 bit int
-    unsigned int laser_dac;
-    unsigned int fan_dac;
-
-};
-
 struct HistogramData {
     double bin0;
     double bin1;

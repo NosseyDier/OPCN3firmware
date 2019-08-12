@@ -244,13 +244,6 @@ bool OPCN3::write_config_variables(byte values[])
   return true;
 }
 
-bool OPCN3::write_config_variables2(byte values[])
-{
-  // Write the configuration [NOT IMPLEMENTED]
-  // Only available with Alphasense OPC-N2 > firmware v18
-  return true;
-}
-
 bool OPCN3::write_serial_number_string(byte values[])
 {
   // NOT IMPLEMENTED
@@ -404,6 +397,8 @@ bool OPCN3::toggle_laser(bool state)
   return this->_compare_arrays(resp, expected, 2);
 }
 
+
+//Checked
 struct ConfigVars OPCN3::read_configuration_variables()
 {
   // Read the configuration variables and return the structure
@@ -514,18 +509,6 @@ struct ConfigVars OPCN3::read_configuration_variables()
   results.bw21 = this->_16bit_int(vals[142], vals[143]);
   results.bw22 = this->_16bit_int(vals[144], vals[145]);
   results.bw23 = this->_16bit_int(vals[146], vals[147]);
-
-  // Gain Scaling Coefficient
-  results.gsc = this->_calculate_float(vals[224], vals[225], vals[226], vals[227]);
-
-  // Sample Flow Rate (ml/s)
-  results.sfr = this->_calculate_float(vals[228], vals[229], vals[230], vals[231]);
-
-  // LaserDAC
-  results.laser_dac = (unsigned int)vals[232];
-  results.fan_dac = (unsigned int)vals[233];
-
-  // Time-of-Flight to Sample Flow Rate ratio
   
   results.AMSamplingInterval    = this->_16bit_int(vals[156], vals[157]);
   results.AMIntervalCount       = this->_16bit_int(vals[158], vals[159]);
@@ -533,6 +516,8 @@ struct ConfigVars OPCN3::read_configuration_variables()
   results.AMOnlySavePMData      = (unsigned int)vals[162];
   results.AMFanOnIdle           = (unsigned int)vals[163];
   results.AMLaserOnIdle         = (unsigned int)vals[164];
+
+  // Time-of-Flight to Sample Flow Rate ratio
   results.tof_sfr               = (unsigned int)vals[165];
   return results;
 }
@@ -615,6 +600,7 @@ struct PMData OPCN3::read_pm_data()
   return data;
 }
 
+// Checked
 struct HistogramData OPCN3::read_histogram(bool convert_to_conc)
 {
   // Read the Histogram Data and reset the histogram, return the struct
