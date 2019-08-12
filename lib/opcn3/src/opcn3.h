@@ -22,6 +22,13 @@ struct Firmware {
     int minor;
 };
 
+struct PowerData {
+    // LaserDAC 8 bit int
+    unsigned int laser_dac;
+    unsigned int fan_dac;
+
+};
+
 struct HistogramData {
     double bin0;
     double bin1;
@@ -160,84 +167,15 @@ struct ConfigVars {
     int bw22;
     int bw23;
 
-    
-    /*
-    // Bin Particle Volume (floats)
-    float bpv0;
-    float bpv1;
-    float bpv2;
-    float bpv3;
-    float bpv4;
-    float bpv5;
-    float bpv6;
-    float bpv7;
-    float bpv8;
-    float bpv9;
-    float bpv10;
-    float bpv11;
-    float bpv12;
-    float bpv13;
-    float bpv14;
-    float bpv15;
-
-    // Bin Particle Densities (floats)
-    float bpd0;
-    float bpd1;
-    float bpd2;
-    float bpd3;
-    float bpd4;
-    float bpd5;
-    float bpd6;
-    float bpd7;
-    float bpd8;
-    float bpd9;
-    float bpd10;
-    float bpd11;
-    float bpd12;
-    float bpd13;
-    float bpd14;
-    float bpd15;
-
-    // Bin Sample Volume Weightings (floats)
-    float bsvw0;
-    float bsvw1;
-    float bsvw2;
-    float bsvw3;
-    float bsvw4;
-    float bsvw5;
-    float bsvw6;
-    float bsvw7;
-    float bsvw8;
-    float bsvw9;
-    float bsvw10;
-    float bsvw11;
-    float bsvw12;
-    float bsvw13;
-    float bsvw14;
-    float bsvw15;
-    */
-
-    // Gain Scaling Coefficient
-    float gsc;
-
-    // Sample Flow Rate (ml/s)
-    float sfr;
-
-    // LaserDAC 8 bit int
-    unsigned int laser_dac;
-    unsigned int fan_dac;
+    unsigned int AMSamplingInterval;
+    unsigned int AMIntervalCount;
+    unsigned int AMFanOnIdle;
+    unsigned int AMLaserOnIdle;
+    unsigned int AMMaxDataArraysInFile;
+    unsigned int AMOnlySavePMData;
 
     // Time of Flight to Sample Flow Rate Conversion Factor
     unsigned int tof_sfr;
-};
-
-struct ConfigVars2 {
-  int AMSamplingInterval;
-  int AMIntervalCount;
-  int AMFanOnIdle;
-  int AMLaserOnIdle;
-  int AMMaxDataArraysInFile;
-  int AMOnlySavePMData;
 };
 
 class OPCN2
@@ -280,7 +218,6 @@ public:
     Firmware read_firmware_version();
     Status read_status();
     ConfigVars read_configuration_variables();
-    ConfigVars2 read_configuration_variables2();
     PMData read_pm_data();
     HistogramData read_histogram(bool convert_to_conc = true);
 };

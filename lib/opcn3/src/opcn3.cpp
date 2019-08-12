@@ -410,7 +410,17 @@ struct ConfigVars OPCN3::read_configuration_variables()
   // Ex.
   // $ alpha.read_configuration_variables();
   ConfigVars results;       // empty structure for the data
-  byte vals[256];
+  int configVarsReturns = 167;
+  byte vals[configVarsReturns + 1];
+
+  if (this->firm_ver.major < 18) {
+    results.AMSamplingInterval    = -999;
+    results.AMIntervalCount       = -999;
+    results.AMFanOnIdle           = -999;
+    results.AMLaserOnIdle         = -999;
+    results.AMMaxDataArraysInFile = -999;
+    results.AMOnlySavePMData      = -999;
+  }
 
   // Read the config variables
   digitalWrite(this->_CS, LOW);
@@ -420,7 +430,7 @@ struct ConfigVars OPCN3::read_configuration_variables()
   delayMicroseconds(10000);
 
   digitalWrite(this->_CS, LOW);
-  for (int i = 0; i < 256; i++){
+  for (int i = 0; i < configVarsReturns + 1; i++){
     vals[i] = SPI1.transfer(0x00);
     delayMicroseconds(4);
   }
@@ -505,62 +515,6 @@ struct ConfigVars OPCN3::read_configuration_variables()
   results.bw22 = this->_16bit_int(vals[144], vals[145]);
   results.bw23 = this->_16bit_int(vals[146], vals[147]);
 
-  /*
-  // Bin Particle Volumes
-  results.bpv0 = this->_calculate_float(vals[32], vals[33], vals[34], vals[35]);
-  results.bpv1 = this->_calculate_float(vals[36], vals[37], vals[38], vals[39]);
-  results.bpv2 = this->_calculate_float(vals[40], vals[41], vals[42], vals[43]);
-  results.bpv3 = this->_calculate_float(vals[44], vals[45], vals[46], vals[47]);
-  results.bpv4 = this->_calculate_float(vals[48], vals[49], vals[50], vals[51]);
-  results.bpv5 = this->_calculate_float(vals[52], vals[53], vals[54], vals[55]);
-  results.bpv6 = this->_calculate_float(vals[56], vals[57], vals[58], vals[59]);
-  results.bpv7 = this->_calculate_float(vals[60], vals[61], vals[62], vals[63]);
-  results.bpv8 = this->_calculate_float(vals[64], vals[65], vals[66], vals[67]);
-  results.bpv9 = this->_calculate_float(vals[68], vals[69], vals[70], vals[71]);
-  results.bpv10 = this->_calculate_float(vals[72], vals[73], vals[74], vals[75]);
-  results.bpv11 = this->_calculate_float(vals[76], vals[77], vals[78], vals[79]);
-  results.bpv12 = this->_calculate_float(vals[80], vals[81], vals[82], vals[83]);
-  results.bpv13 = this->_calculate_float(vals[84], vals[85], vals[86], vals[87]);
-  results.bpv14 = this->_calculate_float(vals[88], vals[89], vals[90], vals[91]);
-  results.bpv15 = this->_calculate_float(vals[92], vals[93], vals[94], vals[95]);
-
-  // Bin Particle Densities
-  results.bpd0 = this->_calculate_float(vals[96], vals[97], vals[98], vals[99]);
-  results.bpd1 = this->_calculate_float(vals[100], vals[101], vals[102], vals[103]);
-  results.bpd2 = this->_calculate_float(vals[104], vals[105], vals[106], vals[107]);
-  results.bpd3 = this->_calculate_float(vals[108], vals[109], vals[110], vals[111]);
-  results.bpd4 = this->_calculate_float(vals[112], vals[113], vals[114], vals[115]);
-  results.bpd5 = this->_calculate_float(vals[116], vals[117], vals[118], vals[119]);
-  results.bpd6 = this->_calculate_float(vals[120], vals[121], vals[122], vals[123]);
-  results.bpd7 = this->_calculate_float(vals[124], vals[125], vals[126], vals[127]);
-  results.bpd8 = this->_calculate_float(vals[128], vals[129], vals[130], vals[131]);
-  results.bpd9 = this->_calculate_float(vals[132], vals[133], vals[134], vals[135]);
-  results.bpd10 = this->_calculate_float(vals[136], vals[137], vals[138], vals[139]);
-  results.bpd11 = this->_calculate_float(vals[140], vals[141], vals[142], vals[143]);
-  results.bpd12 = this->_calculate_float(vals[144], vals[145], vals[146], vals[147]);
-  results.bpd13 = this->_calculate_float(vals[148], vals[149], vals[150], vals[151]);
-  results.bpd14 = this->_calculate_float(vals[152], vals[153], vals[154], vals[155]);
-  results.bpd15 = this->_calculate_float(vals[156], vals[157], vals[158], vals[159]);
-
-  // Bin Particle Sample Volumes
-  results.bsvw0 = this->_calculate_float(vals[160], vals[161], vals[162], vals[163]);
-  results.bsvw1 = this->_calculate_float(vals[164], vals[165], vals[166], vals[167]);
-  results.bsvw2 = this->_calculate_float(vals[168], vals[169], vals[170], vals[171]);
-  results.bsvw3 = this->_calculate_float(vals[172], vals[173], vals[174], vals[175]);
-  results.bsvw4 = this->_calculate_float(vals[176], vals[177], vals[178], vals[179]);
-  results.bsvw5 = this->_calculate_float(vals[180], vals[181], vals[182], vals[183]);
-  results.bsvw6 = this->_calculate_float(vals[184], vals[185], vals[186], vals[187]);
-  results.bsvw7 = this->_calculate_float(vals[188], vals[189], vals[190], vals[191]);
-  results.bsvw8 = this->_calculate_float(vals[192], vals[193], vals[194], vals[195]);
-  results.bsvw9 = this->_calculate_float(vals[196], vals[197], vals[198], vals[199]);
-  results.bsvw10 = this->_calculate_float(vals[200], vals[201], vals[202], vals[203]);
-  results.bsvw11 = this->_calculate_float(vals[204], vals[205], vals[206], vals[207]);
-  results.bsvw12 = this->_calculate_float(vals[208], vals[209], vals[210], vals[211]);
-  results.bsvw13 = this->_calculate_float(vals[212], vals[213], vals[214], vals[215]);
-  results.bsvw14 = this->_calculate_float(vals[216], vals[217], vals[218], vals[219]);
-  results.bsvw15 = this->_calculate_float(vals[220], vals[221], vals[222], vals[223]);
-  */
-
   // Gain Scaling Coefficient
   results.gsc = this->_calculate_float(vals[224], vals[225], vals[226], vals[227]);
 
@@ -572,56 +526,18 @@ struct ConfigVars OPCN3::read_configuration_variables()
   results.fan_dac = (unsigned int)vals[233];
 
   // Time-of-Flight to Sample Flow Rate ratio
-  results.tof_sfr = (unsigned int)vals[234];
-
+  
+  results.AMSamplingInterval    = this->_16bit_int(vals[156], vals[157]);
+  results.AMIntervalCount       = this->_16bit_int(vals[158], vals[159]);
+  results.AMMaxDataArraysInFile = this->_16bit_int(vals[160], vals[161]);
+  results.AMOnlySavePMData      = (unsigned int)vals[162];
+  results.AMFanOnIdle           = (unsigned int)vals[163];
+  results.AMLaserOnIdle         = (unsigned int)vals[164];
+  results.tof_sfr               = (unsigned int)vals[165];
   return results;
 }
 
-struct ConfigVars2 OPCN3::read_configuration_variables2()
-{
-  // Read the additional configuration variables
-  // Only available on OPCN2's with firmware >v18
-  // Ex.
-  // $ alpha.read_configuration_variables2();
-  ConfigVars2 results;       // empty structure for the data
-  byte vals[9];
-
-  if (this->firm_ver.major < 18) {
-    results.AMSamplingInterval    = -999;
-    results.AMIntervalCount       = -999;
-    results.AMFanOnIdle           = -999;
-    results.AMLaserOnIdle         = -999;
-    results.AMMaxDataArraysInFile = -999;
-    results.AMOnlySavePMData      = -999;
-  }
-  else {
-    // Read the config variables
-    digitalWrite(this->_CS, LOW);
-    SPI1.transfer(0x3D);
-    digitalWrite(this->_CS, HIGH);
-
-    delayMicroseconds(10000);
-
-    digitalWrite(this->_CS, LOW);
-    for (int i = 0; i < 9; i++){
-        vals[i] = SPI1.transfer(0x00);
-        delayMicroseconds(4);
-    }
-
-    digitalWrite(this->_CS, HIGH);
-
-    // Fill in the results
-    results.AMSamplingInterval    = this->_16bit_int(vals[0], vals[1]);
-    results.AMIntervalCount       = this->_16bit_int(vals[2], vals[3]);
-    results.AMFanOnIdle           = (unsigned int)vals[4];
-    results.AMLaserOnIdle         = (unsigned int)vals[5];
-    results.AMMaxDataArraysInFile = this->_16bit_int(vals[6], vals[7]);
-    results.AMOnlySavePMData      = (unsigned int)vals[8];
-  }
-
-  return results;
-}
-
+// Checked
 String OPCN3::read_serial_number()
 {
   // Read the serial number of the OPC
@@ -629,7 +545,7 @@ String OPCN3::read_serial_number()
   // Ex.
   // $ alpha.read_serial_number();
   String result = "";
-  byte vals[60];
+  byte vals[59];
 
   if (this->firm_ver.major < 18) {
     result = "";
@@ -643,7 +559,8 @@ String OPCN3::read_serial_number()
 
     // Iterate to read the entire string
     digitalWrite(this->_CS, LOW);
-    for (int i = 0; i < 61; i++){
+    // OPCN2 - 61
+    for (int i = 0; i < 60; i++){
         vals[i] = SPI1.transfer(0x00);
         result += String((char)vals[i]);
         delayMicroseconds(4);
@@ -657,6 +574,7 @@ String OPCN3::read_serial_number()
   return result;
 }
 
+// Checked
 struct PMData OPCN3::read_pm_data()
 {
   // Read the PM Data and reset the histogram, return the struct
@@ -727,11 +645,6 @@ struct HistogramData OPCN3::read_histogram(bool convert_to_conc)
 
   digitalWrite(this->_CS, HIGH);      // Pull the CS High
 
-  //data.period = this->_calculate_float(vals[44], vals[45], vals[46], vals[47]);
-  data.period = (double)this->_16bit_int(vals[52], vals[53]]);
-  //data.sfr    = this->_calculate_float(vals[36], vals[37], vals[38], vals[39]);
-  data.sfr = (double)this->_16bit_int(vals[54], vals[55]]);
-
   // If convert_to_conc = True, convert from raw data to concentration
   double conv;
 
@@ -773,6 +686,11 @@ struct HistogramData OPCN3::read_histogram(bool convert_to_conc)
   data.bin5MToF = int(vals[50]) / 3.0;
   data.bin7MToF = int(vals[51]) / 3.0;
 
+  //data.period = this->_calculate_float(vals[44], vals[45], vals[46], vals[47]);
+  data.period = this->_16bit_int(vals[52], vals[53]);
+
+  //data.sfr    = this->_calculate_float(vals[36], vals[37], vals[38], vals[39]);
+  data.sfr = this->_16bit_int(vals[54], vals[55]);
   // This holds either temperature or pressure
   // If temp, this is temp in C x 10
   // If pressure, this is pressure in Pa
@@ -781,11 +699,11 @@ struct HistogramData OPCN3::read_histogram(bool convert_to_conc)
   // Relative humidity
   data.humidity = this->_16bit_int(vals[58], vals[59]);
   
-  data.checksum = this->_16bit_int(vals[84], vals[85]);
-
   data.pm1 = this->_calculate_float(vals[60], vals[61], vals[62], vals[63]);
   data.pm25 = this->_calculate_float(vals[64], vals[65], vals[66], vals[67]);
   data.pm10 = this->_calculate_float(vals[68], vals[69], vals[70], vals[71]);
+
+  data.checksum = this->_16bit_int(vals[84], vals[85]);
 
   return data;
 }
