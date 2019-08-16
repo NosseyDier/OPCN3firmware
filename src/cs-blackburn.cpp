@@ -19,12 +19,13 @@ SYSTEM_MODE(MANUAL);
 
 OPCN3 alpha(D5);
 HistogramData hist;
+Status power_data;
 ConfigVars vars;
 
 void setup(){
 
- Serial.begin();
-    Serial.println("here");
+  Serial.begin();
+  Serial.println("here");
 
   Wire.begin(); 
   Pca9554.begin(GPIO_A);
@@ -49,12 +50,16 @@ void setup(){
 
   delay(1000);
   alpha.begin(D5);
+  //delay(1000);
+  //alpha.on();
+  
   delay(1000);
   alpha.on();
 
-
+  
   
   Serial.println("Testing OPC-N3 v" + String(alpha.firm_ver.major) + "." + String(alpha.firm_ver.minor));
+  /*
   // Read and print the configuration variables
   vars = alpha.read_configuration_variables();
   power_data = alpha.read_status();
@@ -64,21 +69,31 @@ void setup(){
   Serial.print("\tLaser DAC:\t"); Serial.println(power_data.laser_dac);
   Serial.print("\tFan DAC:\t"); Serial.println(power_data.fan_dac);
   Serial.print("\tToF-SFR:\t"); Serial.println(vars.tof_sfr);
+  */
   
-  delay(1000);
+  //delay(1000);
 }
 
 void loop(){
+    int sampling_period = 5;
+    //delay(5000);
 
-    delay(5000);
-
-    hist = alpha.read_histogram();
-
-    // Print out the histogram data
     Serial.print("\nInformation string:\t"); Serial.println(alpha.read_information_string());
 
-    Serial.print("\nFirmware version major:\t"); Serial.println(alpha.read_firmware_version().major);
-    Serial.print("\nFirmware version minor:\t"); Serial.println(alpha.read_firmware_version().minor);
+    hist = alpha.read_histogram();
+    /*
+    power_data = alpha.read_status();
+    vars = alpha.read_configuration_variables();
+    */
+    // Print out the histogram data
+
+    /*
+
+    Serial.print("\tLaser ON:\t"); Serial.println(power_data.laser_on);
+    Serial.print("\tFan ON:\t"); Serial.println(power_data.fan_on);
+    Serial.print("\tToF-SFR:\t"); Serial.println(vars.tof_sfr);
+
+    */
 
     Serial.print("\nSampling Period:\t"); Serial.println(hist.period);
     Serial.print("\tSFR:\t"); Serial.println(hist.sfr);
@@ -88,4 +103,11 @@ void loop(){
     //Particle.publish("PM2.5: ", String::format("%.2f", hist.pm25), PUBLIC);
     Serial.print("PM10: "); Serial.println(hist.pm10);
     //Particle.publish("PM10: ", String::format("%.2f", hist.pm10), PUBLIC);
+
+    /*
+    Serial.print("\tLaser DAC:\t"); Serial.println(power_data.laser_dac);
+    Serial.print("\tFan DAC:\t"); Serial.println(power_data.fan_dac);
+    Serial.print("\tToF-SFR:\t"); Serial.println(vars.tof_sfr);
+    */
+    delayMicroseconds(sampling_period * 1000000);
 }

@@ -60,15 +60,14 @@ uint16_t OPCN3::_16bit_int(byte LSB, byte MSB)
 bool OPCN3::_compare_arrays(byte array1[], byte array2[], int length)
 {
   // Compare two arrays and return a boolean
-  bool result = true;
 
   for (int i = 0; i < length; i++){
     if (array1[i] != array2[i]){
-      result = false;
+      return false;
     }
   }
 
-  return result;
+  return true;
 }
 
 float OPCN3::_calculate_float(byte val0, byte val1, byte val2, byte val3)
@@ -109,7 +108,9 @@ bool OPCN3::ping()
   return this->_compare_arrays(resp, expected, 1);
 }
 
-bool OPCN3::on()
+//turn on laser and fan
+/*
+void OPCN3::on()
 {
   // Turn ON the OPC and return a boolean
   // Ex.
@@ -128,7 +129,48 @@ bool OPCN3::on()
   vals[1] = SPI1.transfer(0x00);
   digitalWrite(this->_CS, HIGH);
 
-  return this->_compare_arrays(vals, expected, 2);
+  //return this->_compare_arrays(vals, expected, 2);
+}
+*/
+
+bool OPCN3::on()
+{
+  // Turn ON the OPC and return a boolean
+  // Ex.
+  // $ alpha.on()
+  // $ true
+  byte vals[4];
+  byte expected[] = {0xF3, 0x03, 0xF3, 0x03};
+
+  digitalWrite(this->_CS, LOW);
+  vals[0] = SPI1.transfer(0x03);
+  digitalWrite(this->_CS, HIGH);
+
+  // > 10 us, < 100us
+  delayMicroseconds(50);
+
+  digitalWrite(this->_CS, LOW);
+  vals[1] = SPI1.transfer(0x07);
+  digitalWrite(this->_CS, HIGH);
+
+  // > 10ms
+  delayMicroseconds(20000);
+
+  digitalWrite(this->_CS, LOW);
+  vals[2] = SPI1.transfer(0x03);
+  digitalWrite(this->_CS, HIGH);
+
+  // > 10 us, < 100us
+  delayMicroseconds(50);
+
+  digitalWrite(this->_CS, LOW);
+  vals[3] = SPI1.transfer(0x03);
+  digitalWrite(this->_CS, HIGH);
+
+  // > 600ms
+  delayMicroseconds(600500);
+
+  return this->_compare_arrays(vals, expected, 4);
 }
 
 bool OPCN3::off()
@@ -160,18 +202,20 @@ String OPCN3::read_information_string()
   // $ alpha.read_information_string()
   String result = "";
   String tmp;
-  byte vals[61];
+  int infoStringReturns = 59;
+  byte vals[infoStringReturns + 1];
 
   digitalWrite(this->_CS, LOW);
   SPI1.transfer(0x3F);
   digitalWrite(this->_CS, HIGH);
 
-  delayMicroseconds(3000);
+  delayMicroseconds(10000);
 
   // Iterate to read the entire string
   digitalWrite(this->_CS, LOW);
-  for (int i = 0; i < 60; i++){
-    vals[i] = SPI1.transfer(0x00);
+  for (int i = 0; i < infoStringReturns + 1; i++){
+    vals[i] = SPI1.transfer(0x3F);
+    //Serial.print(vals[i]);
     result += String((char)vals[i]);
     delayMicroseconds(4);
   }
@@ -207,10 +251,10 @@ struct Status OPCN3::read_status()
   digitalWrite(this->_CS, HIGH);
 
   // Calculate the values!
-  data.fanON    = (unsigned int)vals[0];
-  data.laserON  = (unsigned int)vals[1];
-  data.fanDAC   = (unsigned int)vals[2];
-  data.laserDAC = (unsigned int)vals[3];
+  data.fan_on    = (unsigned int)vals[0];
+  data.laser_on  = (unsigned int)vals[1];
+  data.fan_dac   = (unsigned int)vals[2];
+  data.laser_dac = (unsigned int)vals[3];
 
   return data;
 }
@@ -230,9 +274,9 @@ struct Firmware OPCN3::read_firmware_version()
   delayMicroseconds(10000);
 
   digitalWrite(this->_CS, LOW);
-  res.major = (unsigned int)SPI1.transfer(0x00);
+  res.major = (unsigned int)SPI1.transfer(0x12);
   delayMicroseconds(4);
-  res.minor = (unsigned int)SPI1.transfer(0x00);
+  res.minor = (unsigned int)SPI1.transfer(0x12);
   digitalWrite(this->_CS, HIGH);
 
   return res;
@@ -290,6 +334,7 @@ bool OPCN3::enter_bootloader()
   return this->_compare_arrays(resp, expected, 1);
 }
 
+//checked
 bool OPCN3::set_fan_power(uint8_t value)
 {
   // Set the fan power
@@ -316,6 +361,7 @@ bool OPCN3::set_fan_power(uint8_t value)
   return this->_compare_arrays(resp, expected, 3);
 }
 
+//checked
 bool OPCN3::set_laser_power(uint8_t value)
 {
   // Set the laser power
@@ -358,14 +404,19 @@ bool OPCN3::toggle_fan(bool state)
 
   // turn either on or off
   digitalWrite(this->_CS, LOW);
-  if (state == true){
-    resp[1] = SPI1.transfer(0x04);
+  if (state == false){
+    resp[1] = SPI1.transfer(0x02);
   }
   else {
-    resp[1] = SPI1.transfer(0x05);
+    resp[1] = SPI1.transfer(0x03);
   }
 
   digitalWrite(this->_CS, HIGH);
+
+  if (state == true){
+    delayMicroseconds(600000);
+  }
+
 
   return this->_compare_arrays(resp, expected, 2);
 }
@@ -385,14 +436,18 @@ bool OPCN3::toggle_laser(bool state)
   delayMicroseconds(10000);
 
   digitalWrite(this->_CS, LOW);
-  if (state == true){
-    resp[1] = SPI1.transfer(0x02);
+  if (state == false){
+    resp[1] = SPI1.transfer(0x06);
   }
   else {
-    resp[1] = SPI1.transfer(0x03);
+    resp[1] = SPI1.transfer(0x07);
   }
 
   digitalWrite(this->_CS, HIGH);
+
+    if (state == true){
+    delayMicroseconds(10000);
+  }
 
   return this->_compare_arrays(resp, expected, 2);
 }
@@ -426,8 +481,8 @@ struct ConfigVars OPCN3::read_configuration_variables()
 
   digitalWrite(this->_CS, LOW);
   for (int i = 0; i < configVarsReturns + 1; i++){
-    vals[i] = SPI1.transfer(0x00);
-    delayMicroseconds(4);
+    vals[i] = SPI1.transfer(0x3C);
+    delayMicroseconds(10000);
   }
 
   digitalWrite(this->_CS, HIGH);
@@ -531,7 +586,8 @@ String OPCN3::read_serial_number()
   // Ex.
   // $ alpha.read_serial_number();
   String result = "";
-  byte vals[59];
+  int serialNumReturns = 59;
+  byte vals[serialNumReturns + 1];
 
   if (this->firm_ver.major < 18) {
     result = "";
@@ -546,8 +602,8 @@ String OPCN3::read_serial_number()
     // Iterate to read the entire string
     digitalWrite(this->_CS, LOW);
     // OPCN2 - 61
-    for (int i = 0; i < 60; i++){
-        vals[i] = SPI1.transfer(0x00);
+    for (int i = 0; i < serialNumReturns + 1; i++){
+        vals[i] = SPI1.transfer(0x10);
         result += String((char)vals[i]);
         delayMicroseconds(4);
     }
@@ -587,7 +643,7 @@ struct PMData OPCN3::read_pm_data()
       digitalWrite(this->_CS, LOW);
 
       for (int i = 0; i < 12; i++){
-          vals[i] = SPI1.transfer(0x00);
+          vals[i] = SPI1.transfer(0x32);
           delayMicroseconds(4);
       }
 
@@ -620,14 +676,14 @@ struct HistogramData OPCN3::read_histogram(bool convert_to_conc)
   SPI1.transfer(0x30);                 // Transfer the command byte
   digitalWrite(this->_CS, HIGH);
 
-  delayMicroseconds(12000);           // Delay for 12 ms
+  delayMicroseconds(50);           // Delay for 12 ms
 
   // Send commands and build array of data
   digitalWrite(this->_CS, LOW);
 
   for (int i = 0; i < histogramReturns + 1; i++){
-      vals[i] = SPI1.transfer(0x00);
-      delayMicroseconds(4);
+      vals[i] = SPI1.transfer(0x30);
+      delayMicroseconds(50);
   }
 
   digitalWrite(this->_CS, HIGH);      // Pull the CS High

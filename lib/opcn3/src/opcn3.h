@@ -11,10 +11,10 @@
 #include <application.h>
 
 struct Status {
-    int fanON;
-    int laserON;
-    int fanDAC;
-    int laserDAC;
+    int fan_on;
+    int laser_on;
+    int fan_dac;
+    int laser_dac;
 };
 
 struct Firmware {
