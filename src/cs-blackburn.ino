@@ -66,39 +66,40 @@ void setup(){
 }
 
 void loop(){
-    int sampling_period = 5;
-    //delay(5000);
+  alpha.on();
+  int sampling_period = 5;
+  //delay(5000);
 
-    Serial.print("\nInformation string:\t"); Serial.println(alpha.read_information_string());
+  Serial.print("\nInformation string:\t"); Serial.println(alpha.read_information_string());
 
-    hist = alpha.read_histogram();
-    /*
-    power_data = alpha.read_status();
-    vars = alpha.read_configuration_variables();
-    */
-    // Print out the histogram data
+  hist = alpha.read_histogram();
+  /*
+  power_data = alpha.read_status();
+  vars = alpha.read_configuration_variables();
+  */
+  // Print out the histogram data
 
-    /*
+  /*
 
-    Serial.print("\tLaser ON:\t"); Serial.println(power_data.laser_on);
-    Serial.print("\tFan ON:\t"); Serial.println(power_data.fan_on);
-    Serial.print("\tToF-SFR:\t"); Serial.println(vars.tof_sfr);
+  Serial.print("\tLaser ON:\t"); Serial.println(power_data.laser_on);
+  Serial.print("\tFan ON:\t"); Serial.println(power_data.fan_on);
+  Serial.print("\tToF-SFR:\t"); Serial.println(vars.tof_sfr);
 
-    */
+  */
 
-    Serial.print("\nSampling Period:\t"); Serial.println(hist.period);
-    Serial.print("\tSFR:\t"); Serial.println(hist.sfr);
-    Serial.print("PM1: "); Serial.println(hist.pm1);
-    //Particle.publish("PM1: ", String::format("%.2f", hist.pm1), PUBLIC);
-    Serial.print("PM2.5: "); Serial.println(hist.pm25);
-    //Particle.publish("PM2.5: ", String::format("%.2f", hist.pm25), PUBLIC);
-    Serial.print("PM10: "); Serial.println(hist.pm10);
-    //Particle.publish("PM10: ", String::format("%.2f", hist.pm10), PUBLIC);
+  Serial.print("\nSampling Period:\t"); Serial.println(hist.period);
+  Serial.print("\tSFR:\t"); Serial.println(hist.sfr);
+  Serial.print("PM1: "); Serial.println(hist.pm1);
+  //Particle.publish("PM1: ", String::format("%.2f", hist.pm1), PUBLIC);
+  Serial.print("PM2.5: "); Serial.println(hist.pm25);
+  //Particle.publish("PM2.5: ", String::format("%.2f", hist.pm25), PUBLIC);
+  Serial.print("PM10: "); Serial.println(hist.pm10);
+  //Particle.publish("PM10: ", String::format("%.2f", hist.pm10), PUBLIC);
 
-    /*
-    Serial.print("\tLaser DAC:\t"); Serial.println(power_data.laser_dac);
-    Serial.print("\tFan DAC:\t"); Serial.println(power_data.fan_dac);
-    Serial.print("\tToF-SFR:\t"); Serial.println(vars.tof_sfr);
-    */
-    delayMicroseconds(sampling_period * 1000000);
+  /*
+  Serial.print("\tLaser DAC:\t"); Serial.println(power_data.laser_dac);
+  Serial.print("\tFan DAC:\t"); Serial.println(power_data.fan_dac);
+  Serial.print("\tToF-SFR:\t"); Serial.println(vars.tof_sfr);
+  */
+  delayMicroseconds(sampling_period * 1000000);
 }
