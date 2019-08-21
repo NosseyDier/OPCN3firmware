@@ -11,6 +11,7 @@ void OPCN3::begin(uint8_t chip_select)
   // Ex. OPCN2 alpha(chip_select = A2);
   _CS = chip_select;
 
+
   // Set up SPI1
   SPI1.begin(_CS);
   SPI1.setBitOrder(MSBFIRST);
